@@ -1,0 +1,42 @@
+# ---------------------------------- #
+# PARAMETROS DEL PROGRAMA
+
+# Archivos con los datos a procesar
+archivos = [a280.tsp, ch130.tsp, d18512.tsp, pr144.tsp, u1060.tsp]
+
+# yes: consola, no: archivos log
+echo = yes
+
+num_ejecuciones = 5
+
+# ---------------------------------- #
+# PARAMETROS GENERALES DE LOS ALGORITMOS
+
+# Semilla para RNG
+dni = 20061076
+
+# Condiciones de parada
+num_evaluations_stop = 50000
+num_sec_stop = 60
+
+# Random Greedy parameter
+k = 5
+
+# Tamaño poblacion inicial
+initial_population = 100
+
+# Operador de cruce (OX2 - MOC)
+cruce = OX2
+
+# ---------------------------------- #
+# PARAMETROS ALGORIMO GENERACIONAL
+
+# Número de soluciones élite que se guardan
+num_elite = 1
+
+# Probabilidad de cruce
+factor_cruce = 0.7
+
+# Probabilidad de mutación en individuo
+factor_mutacion = 0.1
+
