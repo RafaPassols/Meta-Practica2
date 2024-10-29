@@ -16,14 +16,20 @@ num_ejecuciones = 5
 dni = 20061076
 
 # Condiciones de parada
-num_evaluations_stop = 50000
+num_evaluaciones_stop = 50000
 num_sec_stop = 60
 
-# Random Greedy parameter
+# Parámetro de greedy aleatorio
 k = 5
 
 # Tamaño poblacion inicial
-initial_population = 100
+tam_poblacion_inicial = 100
+
+# % de la población generada con greedy aleatorio
+factor_greedy = params[]
+
+# % de la población generada aleatoriamente
+factor_aleatorio = 0.0
 
 # Operador de cruce (OX2 - MOC)
 cruce = OX2
@@ -32,11 +38,17 @@ cruce = OX2
 # PARAMETROS ALGORIMO GENERACIONAL
 
 # Número de soluciones élite que se guardan
-num_elite = 1
+num_elites = 1
 
 # Probabilidad de cruce
 factor_cruce = 0.7
 
 # Probabilidad de mutación en individuo
 factor_mutacion = 0.1
+
+# Tamaño del torneo de selección
+k_mejores = 2
+
+# Tamaño del torneo para conservar los elites
+k_peores = 3
 

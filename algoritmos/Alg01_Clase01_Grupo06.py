@@ -4,7 +4,7 @@ import numpy as np
 from utils.utilidades import Utilidades
 
 class GreedyAleatorio:
-    def __init__(self, matriz_distancias, params):
+    def __init__(self, matriz_distancias, params, semilla):
         """
         Inicializa el algoritmo Greedy Aleatorio.
 
@@ -13,15 +13,16 @@ class GreedyAleatorio:
         """
         self.matriz_distancias = matriz_distancias
         self.k = params['k']
+        self.semilla = semilla
 
-    def resolver(self, semilla, logger=None):
+    def resolver(self, logger=None):
         """
         Resuelve el problema utilizando el algoritmo Greedy Aleatorio con una semilla específica.
 
         :param semilla: Semilla para el generador aleatorio.
         :return: Lista de ciudades en el orden del tour y la distancia total del tour.
         """
-        random.seed(semilla)  # Establece la semilla para la aleatoriedad
+        random.seed(self.semilla)  # Establece la semilla para la aleatoriedad
         num_ciudades = self.matriz_distancias.shape[0]  # Número de ciudades
         visitadas = np.zeros(num_ciudades, dtype=bool)  # Lista booleana de ciudades visitadas
         tour = []

@@ -28,7 +28,4 @@ class TSP:
 
         # Calcula la matriz de distancias usando scipy
         self.matriz_distancias = cdist(coordenadas, coordenadas, metric='euclidean')
-
-        # Inicializa el tour inicial (puedes ajustar esto según tu lógica)
-        self.tour_inicial = list(range(dimension))
-        return self.matriz_distancias, self.tour_inicial
+        return self.matriz_distancias
