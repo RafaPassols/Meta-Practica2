@@ -56,7 +56,7 @@ class Estacionario:
             # Recombina los padres para obtener los hijos
             hijos = self.recombinar(padres)
             if self.generacion == 1:
-                self.logger.registrar_evento(f'\nHijos obtenidos: {[h for h in hijos]}\n')
+                self.logger.registrar_evento(f'Hijos obtenidos: {[h for h in hijos]}\n')
 
             # Se mutan los hijos generados en el paso anterior
             self.mutar(hijos)

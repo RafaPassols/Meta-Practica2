@@ -52,4 +52,6 @@ class Individuo:
 
 
     def __repr__(self):
+        if not self.flag:
+            return f'Fitness: No evaluado  Generacion: {self.generacion}'
         return f'Fitness: {self.fitness:.2f}  Generación: {self.generacion}'
