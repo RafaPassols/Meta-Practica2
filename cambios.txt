@@ -18,3 +18,65 @@ necesario. Además ahora se pueden intercambiar
 3) He cambiado ligeramente factorizacion() para que devuelva directamente la diferencia en distancia
 
 
+----------------------------------------------------------------------------------------------------------------
+
+CAMBIOS ALEX:
+
+1) Atendiendo a lo que dijo Cristóbal en clase de teoría, he modificado la clase Individuo:
+PARÁMETROS:
+    - tour: Solución.
+    - fitness: Distancia total de la solución.
+    - flag: Flag que indica si el individuo ha sido evaluado previamente o no.
+    - generacion: Generación en la que el individuo fue generado. Útil para saber si la convergencia es prematura o no.
+    (Ejemplo: Si el mejor individuo se generó en la t = 3, quiere decir que el algoritmo no evoluciona, está estancado)
+MÉTODOS:
+    + intercambio_2_opt: Operador de intercambio.
+    + factorización: Para cálculo eficiente.
+    + __repr__: Representación del individuo.
+
+2) He cambiado la función de evaluación, ahora evalúa todos los individuos que NO hayan sido evaluados
+previamente antes dentro de la función. Antes las evaluaciones se hacían en el Individuo y en el Greedy Aleatorio
+,pero ahora está puesto como debería de ser porque no afecta tampoco al tiempo en exceso y es más claro.
+Además, el contar el número de evaluaciones se hace también en el momento de ser evaluadas en lugar de en el
+código de la función ejecutar(), pues Cristóbal valoraría que el esquema se mantuviera como en las diapositivas.
+
+3) He actualizado las funciones de selección en los algoritmos GEN y EST para que los individuos que elija
+en el torneo binario sean diferentes (esto lo específico Cristóbal en clase).
+Además, vi un pequeño error porque se reutilizaba la función de selección para ambos algoritmos, pero se
+devolvía el min en ambos casos, mientras que en el EST debería devolver el peor, es decir el max de los kWorst.
+
+===================================
+ESTRUCTURA DEL ALGORITMO EVOLUTIVO:
+===================================
+
+INICIO
+    t = 0
+    inicializar P(t)
+    evaluar P(t)
+    MIENTRAS (no se cumple la condición de parada) HACER
+        t = t+1
+        seleccionar P´ desde P(t-1)
+        recombinar P´
+        mutar P´
+        evaluar P(t)
+        reemplazar P(t) a partir de P(t-1) y P´
+    FIN MIENTRAS
+FIN
+
+4) He movido las funciones de cruce al módulo de auxiliares para que puedan ser llamadas por ambos
+algoritmos evolutivos.
+
+5) La función 'calcular_distancia()' ahora se llama 'funcion_objetivo()'
+
+6) El Greedy Aleatorio (GRE) como comenté en el apartado 2) ya no devuelve la distancia, sino que se calcula
+al momento de evaluar la solución.
+
+7) El Multihilo he tenido que obviarlo, porque al implementarlo con mas de 1 ejecución la memoria peta.
+Más vale que tarde un poquito más en ejecutar.
+
+8) He separado los dos algoritmos en clases distintas como se indica en la entrega de la Práctica 2.
+
+9) He añadido la clase Logger en el módulo de auxiliares (los logs es lo próximo que voy a implementar)
+
+10) He vuelto a crear el módulo 'modelos' pero simplemente porque Individuo es algo más tangible que un
+procesamiento o unas utilidades auxiliares.

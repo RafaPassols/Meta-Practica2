@@ -9,7 +9,7 @@ from scipy.spatial.distance import cdist
 
 
 class ProcesadorTSP:
-    """Procesa archivos de tipo .tsp para leer instancias de problemas específicos"""
+    """"Procesa archivos de tipo .tsp para leer instancias de problemas específicos"""
 
     def __init__(self, archivo):
         self.archivo = archivo
@@ -19,7 +19,7 @@ class ProcesadorTSP:
 
 
     def cargar_datos_tsp(self):
-        """Devuelve la matriz de distancias"""
+        # Lógica para cargar y procesar el archivo .tsp
         try:
             with open(self.archivo, 'r') as archivo:
                 lineas = archivo.readlines()
@@ -47,7 +47,10 @@ class ProcesadorTSP:
 
         # Calcula la matriz de distancias
         self.matriz_distancias = cdist(coordenadas, coordenadas, 'euclidean')
-        return self.matriz_distancias
+
+        # Inicializa el tour
+        self.tour = np.random.permutation(dimension)
+        return self.matriz_distancias, self.tour
 
 
     def mostrar_tour(self, tour):
@@ -88,9 +91,8 @@ class ProcesadorTXT:
                 clave = match.group(1)
                 valor = match.group(2).strip()
 
-                # Para convertir aquellos parámetros que no sean cadenas en sus tipos correspondientes
+                # Convierte los valores a los tipos adecuados
                 if valor.startswith('[') and valor.endswith(']'):
-                    # Lista de cadenas
                     valor = [x.strip().strip("'\"") for x in valor[1:-1].split(',')]
                 elif valor.isdigit():
                     valor = int(valor)
@@ -98,6 +100,8 @@ class ProcesadorTXT:
                     valor = float(valor)
                 elif valor.lower() in ['yes', 'no']:
                     valor = valor.lower() == 'yes'
+                else:
+                    valor = valor
 
                 # Almacena en el diccionario los parámetros leídos
                 self.parametros[clave] = valor
