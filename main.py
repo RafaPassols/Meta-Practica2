@@ -4,6 +4,7 @@
 import sys, os, random
 
 # Importaciones locales
+from auxiliares.crear_logs import Logger
 from auxiliares.funciones_generales import generar_semillas
 from auxiliares.procesador_archivos import ProcesadorTXT, ProcesadorTSP
 from algoritmos.AlgGEN_Clase01_Grupo06 import Generacional
@@ -15,6 +16,9 @@ import numpy as np
 
 def procesar_archivos_tsp(archivos_tsp, params, semillas):
     """Procesamiento de los archivos (.tsp)."""
+
+    # Lista para almacenar los resultados
+    resultados: list[str] = []
 
     for archivo in archivos_tsp:
         ruta_archivo = os.path.join('data', archivo)
@@ -34,33 +38,45 @@ def procesar_archivos_tsp(archivos_tsp, params, semillas):
             random.seed(semilla)
             np.random.seed(semilla)
 
-            # PRUEBA 03: Generacional
+            # Crea los ficheros logs
+            log_gen = Logger(nombre_algoritmo='GEN', archivo_tsp={'nombre': archivo}, semilla=semilla, num_ejecucion=i, echo=params['echo'])
+            log_est = Logger(nombre_algoritmo='EST', archivo_tsp={'nombre': archivo}, semilla=semilla, num_ejecucion=i, echo=params['echo'])
+
+            resultados.append(
+                f'--------------------------------------------------\n'
+                f'Archivo: {archivo}    Semilla: {semilla}\n'
+                f'--------------------------------------------------\n'
+            )
+
             # Ejecuta el algoritmo evolutivo generacional
             if 'generacional' in params['algoritmos']:
-                print(f'Ejecutando Algoritmo GENERACIONAL con la semilla {semilla}:')
-                generacional = Generacional(matriz, params)  # Crea una instancia del algoritmo generacional
+                generacional = Generacional(matriz, params, log_gen)  # Crea una instancia del algoritmo generacional
                 generacional.ejecutar()  # Ejecuta el algoritmo
 
                 # Muestra resultados
-                print(f'Generación final alcanzada: {generacional.generacion}')
-                print(f'Evaluaciones realizadas: {generacional.evaluaciones}')
-                mejor_individuo = min(generacional.poblacion, key=lambda ind: ind.fitness)
-                print(f'Mejor tour encontrado: {mejor_individuo.tour}')
-                print(f'Distancia total del mejor tour: {mejor_individuo.fitness:.2f}\n')
+                resultados.append(
+                    f'GENERACIONAL\n'
+                    f'Generación final alcanzada: {generacional.generacion}\n'
+                    f'Evaluaciones realizadas: {generacional.evaluaciones}\n'
+                    f'Mejor individuo: {min(generacional.poblacion, key=lambda ind: ind.fitness)}\n'
+                )
 
-            # PRUEBA 04: Estacionario
             # Ejecuta el algoritmo evolutivo estacionario
             if 'estacionario' in params['algoritmos']:
-                print(f'Ejecutando Algoritmo ESTACIONARIO con la semilla {semilla}:')
-                estacionario = Estacionario(matriz, params)  # Crea una instancia del algoritmo estacionario
+                estacionario = Estacionario(matriz, params, log_est)  # Crea una instancia del algoritmo estacionario
                 estacionario.ejecutar()  # Ejecuta el algoritmo
 
                 # Muestra resultados
-                print(f'Generación final alcanzada: {estacionario.generacion}')
-                print(f'Evaluaciones realizadas: {estacionario.evaluaciones}')
-                mejor_individuo = min(estacionario.poblacion, key=lambda ind: ind.fitness)
-                print(f'Mejor tour encontrado: {mejor_individuo.tour}')
-                print(f'Distancia total del mejor tour: {mejor_individuo.fitness:.2f}\n')
+                resultados.append(
+                    f'ESTACIONARIO\n'
+                    f'Generación final alcanzada: {estacionario.generacion}\n'
+                    f'Evaluaciones realizadas: {estacionario.evaluaciones}\n'
+                    f'Mejor individuo: {min(estacionario.poblacion, key=lambda ind: ind.fitness)}\n'
+                )
+
+        print('\n')
+
+    return resultados
 
 
 
@@ -95,7 +111,10 @@ def main():
         os.makedirs('logs', exist_ok=True)
 
     # Procesa los archivos
-    procesar_archivos_tsp(archivos_tsp, params, semillas)
+    resultados = procesar_archivos_tsp(archivos_tsp, params, semillas)
+
+    for resultado in resultados:
+        print(resultado)
 
 
 if __name__ == '__main__':

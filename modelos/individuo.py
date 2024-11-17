@@ -52,4 +52,4 @@ class Individuo:
 
 
     def __repr__(self):
-        return f'fitness: {self.fitness:.2f}'
+        return f'Fitness: {self.fitness:.2f}  Generación: {self.generacion}'

@@ -15,45 +15,65 @@ import numpy as np
 class Estacionario:
     """Implementa el algoritmo evolutivo estacionario (EST)."""
 
-    def __init__(self, matriz, params):
+    def __init__(self, matriz, params, logger=None):
         self.matriz = matriz
         self.params = params
         self.generacion = None
-        self.poblacion = []     # Lista de individuos (soluciones)
-
-        self.evaluaciones = 0   # Evaluaciones realizadas
-        self.elite = []         # Almacena el individuo élite (depende de 'E')
-
+        self.poblacion = []             # Lista de individuos (soluciones)
+        self.evaluaciones = 0           # Evaluaciones realizadas
+        self.elite = []                 # Almacena el individuo élite (depende de 'E')
         self.inicio_tiempo = time.time()
         self.tiempo_ejecucion = None
+        self.logger = logger            # Logger para registrar eventos
 
 
     def ejecutar(self):
         """Ejecuta el algoritmo evolutivo estacionario."""
 
+        self.logger.registrar_evento('Iniciando ejecución del algoritmo estacionario.')
+
         self.generacion = 0
         self.inicializar_poblacion()
         self.evaluar(self.poblacion)
+
+        self.logger.registrar_evento('Población inicial generada:')
+        for idx, individuo in enumerate(self.poblacion, start=1):
+            self.logger.registrar_evento(f'  Individuo: {idx}  {individuo}')
 
         while (self.evaluaciones < self.params['max_evaluaciones']) and (time.time() - self.inicio_tiempo < self.params['tiempo']):
 
             # t = t+1
             self.generacion += 1
 
+            if self.generacion == 1:
+                self.logger.registrar_evento('=== Inicio de la Generación 0 ===')
+
             # Selecciona dos padres de la población P(t-1)
             padres = self.seleccionar()
+            if self.generacion == 1:
+                self.logger.registrar_evento(f'\nPadres seleccionados: {[p for p in padres]}')
 
             # Recombina los padres para obtener los hijos
             hijos = self.recombinar(padres)
+            if self.generacion == 1:
+                self.logger.registrar_evento(f'\nHijos obtenidos: {[h for h in hijos]}\n')
 
             # Se mutan los hijos generados en el paso anterior
             self.mutar(hijos)
+            if self.generacion == 1:
+                self.logger.registrar_evento(f'Mutaciones aplicadas a la descendencia.')
 
             # Evalúa los nuevos individuos generados
             self.evaluar(hijos)
+            self.logger.registrar_evento(f'Evaluando hijos...')
+            self.logger.registrar_evento(f'Evaluaciones realizadas hasta ahora: {self.evaluaciones} | Mejor fitness actual: {min(ind.fitness for ind in hijos):.2f}')
 
             # Reemplaza los peores individuos de la población por los hijos
             self.reemplazar(hijos)
+            if self.generacion >= 1:
+                self.logger.registrar_evento(f'\nGeneración {self.generacion}: Nuevos individuos generados:')
+                for ixz, individuo in enumerate(hijos, start=1):
+                    self.logger.registrar_evento(f"  Individuo: {ixz}  {individuo}")
 
         self.tiempo_ejecucion = time.time() - self.inicio_tiempo
 
@@ -87,6 +107,7 @@ class Estacionario:
                 # Evaluamos el individuo (solución) calculando su fitness
                 individuo.fitness = funcion_objetivo(individuo.tour, self.matriz)
                 individuo.flag = True
+                individuo.generacion = self.generacion
                 self.evaluaciones += 1
 
 
@@ -109,6 +130,11 @@ class Estacionario:
                 padres.append(padre_2)
                 break
 
+        # Log para la primera generación
+        if self.generacion == 1:
+            self.logger.registrar_evento(f'Torneo: {[ind for ind in torneo_1]} -> Seleccionado: {padre_1}')
+            self.logger.registrar_evento(f'Torneo: {[ind for ind in torneo_2]} -> Seleccionado: {padre_2}')
+
         return padres
 
 
@@ -129,6 +155,9 @@ class Estacionario:
         hijos.append(hijo_1)
         hijos.append(hijo_2)
 
+        if self.generacion == 1:
+            self.logger.registrar_evento(f'CRUCE APLICADO: {self.params['cruce']}')
+
         return hijos
 
 
@@ -139,6 +168,10 @@ class Estacionario:
             if random.random() < self.params['per_mutacion']:
                 # Muta al individuo (aplica 2-opt)
                 individuo.intercambio_2_opt(self.matriz)
+
+                # Log para primera generación
+                if self.generacion == 1:
+                    self.logger.registrar_evento(f'Mutación aplicada a individuo: {individuo}')
 
 
     def reemplazar(self, hijos):
@@ -158,3 +191,7 @@ class Estacionario:
             # Reemplazo
             self.poblacion.remove(peor)
             self.poblacion.append(hijo)
+
+            # Log para primera generación
+            if self.generacion == 1:
+                self.logger.registrar_evento(f'Reemplazo: Peor individuo {peor} sustituido por élite {hijo}')
