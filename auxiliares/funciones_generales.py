@@ -67,11 +67,11 @@ def cruce_moc(padre1, padre2):
     # Elegir un punto de cruce al azar
     punto_cruce = random.randint(1, n - 2)  # Se elige el punto evitando los extremos
 
-    # Identifica la mitad derecha de padre2
+    # Identifica la mitad derecha de cada padre
     mitad_der_padre2 = padre2.tour[punto_cruce:]
     mitad_der_padre1 = padre1.tour[punto_cruce:]
 
-    # Verificar si cada elemento de padre1 está en mitad_der_padre2
+    # Verificar si cada elemento de uno de los padres está en la mitad derecha del otro
     esta_en_padre2 = np.isin(padre1.tour, mitad_der_padre2)
     indices_padre1 = np.where(esta_en_padre2)[0]    # índices de los elementos de padre1 que están en padre2
 
@@ -81,10 +81,10 @@ def cruce_moc(padre1, padre2):
     # Completa las posiciones '*' con los elementos de la mitad derecha de padre2 y viceversa
     hijo1_tour = padre1.tour.copy()
     hijo1_tour[indices_padre1] = mitad_der_padre2
-    hijo1 = Individuo(hijo1_tour)  # El fitness se calcula automáticamente
+    hijo1 = Individuo(hijo1_tour)
 
     hijo2_tour = padre2.tour.copy()
     hijo2_tour[indices_padre2] = mitad_der_padre1
-    hijo2 = Individuo(hijo2_tour)  # El fitness se calcula automáticamente
+    hijo2 = Individuo(hijo2_tour)
 
     return hijo1, hijo2
