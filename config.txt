@@ -1,54 +1,47 @@
-# ---------------------------------- #
-# PARAMETROS DEL PROGRAMA
+# Parámetros Práctica 2
 
-# Archivos con los datos a procesar
-archivos = [a280.tsp, ch130.tsp, d18512.tsp, pr144.tsp, u1060.tsp]
+# Archivos .TSP
+archivos_tsp = [a280.tsp, ch130.tsp, d18512.tsp, pr144.tsp, u1060.tsp]
 
-# yes: consola, no: archivos log
-echo = yes
+# Algoritmos Evolutivos
+algoritmos = [generacional, estacionario]
 
-num_ejecuciones = 5
+# Identificador Alumno (DNI)
+dni_alumno = 77378287
 
-# ---------------------------------- #
-# PARAMETROS GENERALES DE LOS ALGORITMOS
+# n.º de Ejecuciones
+num_ejecuciones = 3
 
-# Semilla para RNG
-dni = 20061076
-
-# Condiciones de parada
-num_evaluaciones_stop = 50000
-num_sec_stop = 60
-
-# Parámetro de greedy aleatorio
+# Aleatoriedad (Greedy Aleatorio)
 k = 5
 
-# Tamaño poblacion inicial
-tam_poblacion_inicial = 100
+# Inicialización (Tamaño de la Población)
+tamanio = 100
 
-# % de la población generada con greedy aleatorio
-factor_greedy = params[]
+# Porcentaje de Individuos generados Aleatoriamente
+per_individuos = 0.8
 
-# % de la población generada aleatoriamente
-factor_aleatorio = 0.0
+# Élite (Esquema Evolutivo Generacional)
+E = 2
 
-# Operador de cruce (OX2 - MOC)
+# Operador de Selección (Torneo Binario)
+kBest = 2
+
+# Operador de Reemplazamiento (Torneo Binario)
+kWorst = 3
+
+# Porcentaje de Probabilidad de Cruce
+per_cruce = 0.7
+
+# Tipo de Cruce (OX2 | MOC)
 cruce = OX2
 
-# ---------------------------------- #
-# PARAMETROS ALGORIMO GENERACIONAL
+# Porcentaje de Probabilidad de Mutación
+per_mutacion = 0.1
 
-# Número de soluciones élite que se guardan
-num_elites = 1
+# Condiciones de Parada
+max_evaluaciones = 50000
+tiempo = 60
 
-# Probabilidad de cruce
-factor_cruce = 0.7
-
-# Probabilidad de mutación en individuo
-factor_mutacion = 0.1
-
-# Tamaño del torneo de selección
-k_mejores = 2
-
-# Tamaño del torneo para conservar los elites
-k_peores = 3
-
+# Registro de Eventos (Logs) --> {'yes': terminal, 'no': logs}
+echo = no
