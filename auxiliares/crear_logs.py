@@ -1,4 +1,4 @@
-# auxiliares/crear_logs.py
+# crear_logs.py
 
 class Logger:
     def __init__(self, nombre_algoritmo, archivo_tsp, semilla, num_ejecucion, echo=True):

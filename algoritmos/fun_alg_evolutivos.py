@@ -1,4 +1,4 @@
-# algoritmos/fun_alg_evolutivos.py
+# fun_alg_evolutivos.py
 
 # Importaciones de bibliotecas estándar
 import random

@@ -1,4 +1,4 @@
-# modelos/individuo.py
+# individuo.py
 import numpy as np
 
 class Individuo:

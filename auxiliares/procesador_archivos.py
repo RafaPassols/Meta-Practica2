@@ -1,4 +1,4 @@
-# auxiliares/procesador_archivos.py
+# procesador_archivos.py
 
 # Importaciones de bibliotecas estándar
 import re

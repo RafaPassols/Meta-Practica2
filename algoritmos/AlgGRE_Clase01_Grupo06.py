@@ -1,4 +1,4 @@
-# algoritmos/AlgGRE_Clase01_Grupo06.py
+# AlgGRE_Clase01_Grupo06.py
 
 # Importaciones de bibliotecas estándar
 import random
