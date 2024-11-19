@@ -43,18 +43,18 @@ def cruce_ox2(padre1, padre2):
     elementos_p1 = padre1.tour[posiciones]
     elementos_p2 = padre2.tour[posiciones]
 
-    # Localizamos las posiciones que ocupan esos elementos en padre1
+    # Localizamos las posiciones que ocupan esos elementos en el otro padre
     posiciones_e2_en_p1 = np.where(np.isin(padre1.tour, elementos_p2))
     posiciones_e1_en_p2 = np.where(np.isin(padre2.tour, elementos_p1))
 
-    # Crea un nuevo individuo hijo y completa con los elementos no repetidos de padre2 y viceversa
+    # Crea los hijos y completa con los elementos no repetidos de cada padre correspondiente
     hijo1_tour = padre1.tour.copy()
     hijo1_tour[posiciones_e2_en_p1] = elementos_p2
-    hijo1 = Individuo(hijo1_tour)  # El fitness se calcula automáticamente
+    hijo1 = Individuo(hijo1_tour)
 
     hijo2_tour = padre2.tour.copy()
     hijo2_tour[posiciones_e1_en_p2] = elementos_p1
-    hijo2 = Individuo(hijo2_tour)  # El fitness se calcula automáticamente
+    hijo2 = Individuo(hijo2_tour)
 
     return hijo1, hijo2
 
