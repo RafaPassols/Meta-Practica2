@@ -10,8 +10,7 @@ algoritmos = [generacional, estacionario]
 dni_alumno = 77378287
 
 # n.º de Ejecuciones
-#num_ejecuciones = 3
-num_ejecuciones = 1
+num_ejecuciones = 3
 
 # Aleatoriedad (Greedy Aleatorio)
 k = 5
@@ -45,4 +44,4 @@ max_evaluaciones = 50000
 tiempo = 60
 
 # Registro de Eventos (Logs) --> {'yes': terminal, 'no': logs}
-echo = yes
+echo = no

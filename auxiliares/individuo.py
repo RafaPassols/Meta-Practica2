@@ -1,9 +1,4 @@
 # modelos/individuo.py
-
-# Importaciones locales
-from auxiliares.funciones_generales import factorizacion_2opt
-
-# Importaciones de terceros
 import numpy as np
 
 
@@ -22,13 +17,39 @@ class Individuo:
                 self.matriz_distancias[self.tour[-1], self.tour[0]])
 
 
-    def mutar(self):
+    def intercambio_2opt(self):
         """Realiza una mutación (2-opt) en el individuo."""
         n = len(self.tour)
         i, j = np.random.default_rng().choice(n, size=2, replace=False)
         self.distancia += factorizacion_2opt(self.tour, self.matriz_distancias, i, j)
         self.tour[i], self.tour[j] = self.tour[j], self.tour[i]
 
-
     def __repr__(self):
         return f'distancia={self.distancia}'
+
+
+def factorizacion_2opt(tour, m, i, j) -> float:
+    """
+        Calcula la diferencia en distancia de un tour si se realizase un 2-opt en las posiciones (i,j)
+        Parameters:
+        - tour: permutación de ciudades
+        - m: matriz de distancias
+        . i,j: posiciones intercambiadas
+    """
+    n = len(tour)
+    i, j = min(i, j), max(i, j)
+    if j - i == 1 or (i == 0 and j == n - 1):
+        # Ciudades consecutivas
+        arcos_desaparecen = m[tour[i - 1], tour[i]] + m[tour[j], tour[(j + 1) % n]]
+        arcos_nuevos = m[tour[i - 1], tour[j]] + m[tour[i], tour[(j + 1) % n]]
+    else:
+        arcos_desaparecen = (
+                m[tour[i - 1], tour[i]] + m[tour[i], tour[(i + 1) % n]] +
+                m[tour[j - 1], tour[j]] + m[tour[j], tour[(j + 1) % n]]
+        )
+        arcos_nuevos = (
+                m[tour[i - 1], tour[j]] + m[tour[j], tour[(i + 1) % n]] +
+                m[tour[j - 1], tour[i]] + m[tour[i], tour[(j + 1) % n]]
+        )
+
+    return arcos_nuevos - arcos_desaparecen
