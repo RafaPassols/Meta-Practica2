@@ -17,7 +17,8 @@ class Estacionario:
 
 
     def inicializar_poblacion(self) -> list[Individuo]:
-        return inicializar_poblacion(self.p['tamanio'], self.p['per_individuos'], self.p['k'], self.matriz_distancias)
+        return inicializar_poblacion(self.p['tamanio'], self.p['per_individuos'], self.p['k'],
+                                     self.matriz_distancias, self.generacion)
 
     def seleccion(self) -> list[Individuo]:
         return seleccion(self.poblacion, 2, self.p['kBest'])
@@ -43,12 +44,12 @@ class Estacionario:
 
             # Genera dos hijos y colocalos en la poblacion por torneo de perdedores
             padres = self.seleccion()
-            hijos = self.cruce(padres[0], padres[1])
+            hijos = self.cruce(padres[0], padres[1], self.generacion)
             self.num_evaluaciones += 2
 
             for hijo in hijos:
                 if random.random() < self.p['per_mutacion']:
-                    hijo.intercambio_2opt()
+                    hijo.intercambio_2opt(self.generacion)
                     self.num_evaluaciones += 1
 
             self.reemplazamiento(hijos[0], hijos[1])
@@ -63,7 +64,7 @@ class Estacionario:
                 self.logger.registrar_evento(f"  Individuo: {ixz}  {individuo}")
             self.logger.registrar_evento(
                 f'Evaluaciones realizadas hasta ahora: {self.num_evaluaciones} '
-                f'| Mejor fitness actual: {min(ind.distancia for ind in self.poblacion):.2f}'
+                f'| Mejor fitness actual: {min(ind.fitness for ind in self.poblacion):.2f}'
             )
             # --------------------------------LOGGING---------------------------------------#
 
@@ -74,5 +75,5 @@ class Estacionario:
         """Elimina dos indiviuos de la población y coloca a los hijos"""
         for hijo in [hijo1, hijo2]:
             torneo = random.sample(range(len(self.poblacion)), self.p['kWorst'])
-            peor_individuo = max(torneo, key=lambda i: self.poblacion[i].distancia)
+            peor_individuo = max(torneo, key=lambda i: self.poblacion[i].fitness)
             self.poblacion[peor_individuo] = hijo

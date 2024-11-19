@@ -1,15 +1,14 @@
 # modelos/individuo.py
 import numpy as np
 
-
 class Individuo:
     """Implementa un individuo de la población."""
 
-    def __init__(self, tour, matriz_distancias, distancia=None):
+    def __init__(self, tour, matriz_distancias, generacion, distancia=None):
         self.tour = tour
         self.matriz_distancias = matriz_distancias
-        self.distancia = self.calcular_distancia() if distancia is None else distancia
-
+        self.generacion = generacion
+        self.fitness = self.calcular_distancia() if distancia is None else distancia
 
     def calcular_distancia(self) -> float:
         """Calcula la distancia total de un tour."""
@@ -17,15 +16,16 @@ class Individuo:
                 self.matriz_distancias[self.tour[-1], self.tour[0]])
 
 
-    def intercambio_2opt(self):
+    def intercambio_2opt(self, generacion: int):
         """Realiza una mutación (2-opt) en el individuo."""
         n = len(self.tour)
         i, j = np.random.default_rng().choice(n, size=2, replace=False)
-        self.distancia += factorizacion_2opt(self.tour, self.matriz_distancias, i, j)
+        self.fitness += factorizacion_2opt(self.tour, self.matriz_distancias, i, j)
         self.tour[i], self.tour[j] = self.tour[j], self.tour[i]
+        self.generacion = generacion
 
     def __repr__(self):
-        return f'distancia={self.distancia}'
+        return f'Fitness: {self.fitness:.2f}  Generación: {self.generacion}'
 
 
 def factorizacion_2opt(tour, m, i, j) -> float:

@@ -67,7 +67,7 @@ def ejecutar_generacional(matriz, params, logger: Logger, queue: mp.Queue = None
         f'Generación final alcanzada: {generacional.generacion}\n'
         f'Evaluaciones realizadas: {generacional.num_evaluaciones}\n'
         f'Tiempo de ejecucion: {generacional.tiempo_ejecucion}\n'
-        f'Mejor individuo: {min(generacional.poblacion, key=lambda ind: ind.distancia)}\n\n'
+        f'Mejor individuo: {min(generacional.poblacion, key=lambda ind: ind.fitness)}\n\n'
         f''
     )
     del generacional
@@ -84,7 +84,7 @@ def ejecutar_estacionario(matriz, params, logger: Logger, queue: mp.Queue = None
         f'Generación final alcanzada: {estacionario.generacion}\n'
         f'Evaluaciones realizadas: {estacionario.num_evaluaciones}\n'
         f'Tiempo de ejecucion: {estacionario.tiempo_ejecucion}\n'
-        f'Mejor individuo: {min(estacionario.poblacion, key=lambda ind: ind.distancia)}\n\n'
+        f'Mejor individuo: {min(estacionario.poblacion, key=lambda ind: ind.fitness)}\n\n'
     )
     del estacionario
     if queue is not None:
@@ -110,7 +110,6 @@ def generar_semillas(dni_alumno, num_semillas, offset=0) -> list[int]:
 
     random.seed(dni_alumno + offset)
     semillas = [random.randint(1, 100000) for _ in range(num_semillas)]
-
     return semillas
 
 

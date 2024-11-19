@@ -21,7 +21,8 @@ class Generacional:
 
 
     def inicializar_poblacion(self) -> list[Individuo]:
-        return inicializar_poblacion(self.p['tamanio'], self.p['per_individuos'], self.p['k'], self.matriz_distancias)
+        return inicializar_poblacion(self.p['tamanio'], self.p['per_individuos'], self.p['k'],
+                                     self.matriz_distancias, self.generacion)
 
     def seleccion(self) -> list[Individuo]:
         return seleccion(self.poblacion, len(self.poblacion), self.p['kBest'])
@@ -46,7 +47,7 @@ class Generacional:
             self.generacion += 1
 
             # Se guardan las mejores soluciones
-            self.elites = sorted(self.poblacion, key=lambda ind: ind.distancia)[:self.p['E']]
+            self.elites = sorted(self.poblacion, key=lambda ind: ind.fitness)[:self.p['E']]
 
             # Selecciona aquellos individuos que tienen una posibilidad de cruzarse
             padres = self.seleccion()
@@ -55,14 +56,14 @@ class Generacional:
             hijos = []
             for i in range(0, len(padres) - 1, 2):
                 if random.random() < self.p['per_cruce']:
-                    hijos.extend(self.cruce(padres[i], padres[i+1]))
+                    hijos.extend(self.cruce(padres[i], padres[i+1], self.generacion))
             self.num_evaluaciones += len(hijos)
             poblacion_intermedia = padres + hijos
 
             # Aplica o no una mutación a cada individuo de la población intermedia
             for individuo in poblacion_intermedia:
                 if random.random() < self.p['per_mutacion']:
-                    individuo.intercambio_2opt()
+                    individuo.intercambio_2opt(self.generacion)
                     self.num_evaluaciones += 1
 
             self.poblacion = self.reemplazamiento(poblacion_intermedia)
@@ -73,7 +74,7 @@ class Generacional:
                 self.logger.registrar_evento(f'\nHijos obtenidos: {[h for h in hijos]}\n')
             self.logger.registrar_evento(
                 f'Evaluaciones realizadas hasta ahora: {self.num_evaluaciones} '
-                f'| Mejor fitness actual: {min(ind.distancia for ind in self.poblacion):.2f}'
+                f'| Mejor fitness actual: {min(ind.fitness for ind in self.poblacion):.2f}'
             )
             if self.generacion >= 1:
                 self.logger.registrar_evento(f'\nGeneración {self.generacion}: Nuevos individuos generados:')
@@ -90,8 +91,7 @@ class Generacional:
         Devuelve nueva población formada por los n mejores de poblacion. Si se proporcionan elites entonces
         se garantiza que serán parte de la nueva población a través de un torneo de perdedores de k individuos
         """
-
-        nueva_poblacion = sorted(poblacion, key=lambda i : i.distancia)[:len(self.poblacion)]
+        nueva_poblacion = sorted(poblacion, key=lambda i : i.fitness)[:len(self.poblacion)]
         if self.elites is not None:
             if self.p['kWorst'] < 0:
                 ValueError("reemplazamiento_generacional(): k debe ser > 0 si elites != None")
@@ -100,12 +100,11 @@ class Generacional:
             for elite in self.elites:
                 if elite not in nuevos_individuos:
                     # Realizar el torneo para elegir un peor individuo
-                    torneo = random.sample(nueva_poblacion, self.p['kWorst'])
-                    peor_individuo = max(torneo, key=lambda individuo: individuo.distancia)
+                    torneo = random.sample(range(len(nueva_poblacion)), self.p['kWorst'])
+                    peor_individuo = max(torneo, key=lambda i: self.poblacion[i].fitness)
 
                     # Reemplazar al peor individuo por el individuo élite
-                    nueva_poblacion.remove(peor_individuo)
-                    nueva_poblacion.append(elite)
+                    nueva_poblacion[peor_individuo] = elite
 
         return nueva_poblacion
 
