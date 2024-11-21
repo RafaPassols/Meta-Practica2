@@ -48,7 +48,7 @@ def seleccion(poblacion: list[Individuo], s: int, k: int) -> list[Individuo]:
     for _ in range(s):
         # El torneo debe hacerse con individuos únicos
         while True:
-            # random.sample es bueno cuando k << len(poblacion)
+            # random.sample es bueno cuando k pequeño
             torneo = random.sample(poblacion, k)
             if len(torneo) == len(set(torneo)):
                 break
