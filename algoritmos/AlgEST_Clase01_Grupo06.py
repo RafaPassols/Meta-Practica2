@@ -75,7 +75,14 @@ class Estacionario:
 
     def reemplazamiento(self, hijo1: Individuo, hijo2: Individuo):
         """Elimina dos indiviuos de la población y coloca a los hijos"""
-        for hijo in [hijo1, hijo2]:
-            torneo = random.sample(range(len(self.poblacion)), self.p['kWorst'])
-            peor_individuo = max(torneo, key=lambda i: self.poblacion[i].fitness)
-            self.poblacion[peor_individuo] = hijo
+        torneo1 = random.sample(range(len(self.poblacion)), self.p['kWorst'])
+        peor_individuo1 = max(torneo1, key=lambda i: self.poblacion[i].fitness)
+
+        while True:
+            torneo2 = random.sample(range(len(self.poblacion)), self.p['kWorst'])
+            peor_individuo2 = max(torneo2, key=lambda i: self.poblacion[i].fitness)
+            if peor_individuo2 != peor_individuo1:
+                break
+
+        self.poblacion[peor_individuo1] = hijo1
+        self.poblacion[peor_individuo2] = hijo2

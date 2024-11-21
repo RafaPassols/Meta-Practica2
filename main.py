@@ -33,15 +33,16 @@ def procesar_archivos_tsp(archivos_tsp, params, semillas) -> list[str]:
             np.random.seed(semilla)
             processes = []
             queue = mp.Queue()
-            log_gen = Logger(nombre_algoritmo='GEN', archivo_tsp={'nombre': archivo}, semilla=semilla, num_ejecucion=i,
-                             echo=params['echo'])
-            log_est = Logger(nombre_algoritmo='EST', archivo_tsp={'nombre': archivo}, semilla=semilla, num_ejecucion=i,
-                             echo=params['echo'])
 
             if 'generacional' in params['algoritmos']:
+                log_gen = Logger(nombre_algoritmo='GEN', archivo_tsp={'nombre': archivo}, semilla=semilla,
+                                 num_ejecucion=i, echo=params['echo'])
                 processes.append(mp.Process(target=ejecutar_generacional, args=(matriz, params, log_gen, queue)))
             if 'estacionario' in params['algoritmos']:
+                log_est = Logger(nombre_algoritmo='EST', archivo_tsp={'nombre': archivo}, semilla=semilla,
+                                 num_ejecucion=i, echo=params['echo'])
                 processes.append(mp.Process(target=ejecutar_estacionario, args=(matriz, params, log_est, queue)))
+
             for p in processes:
                 p.start()
             for p in processes:
@@ -55,6 +56,7 @@ def procesar_archivos_tsp(archivos_tsp, params, semillas) -> list[str]:
             while not queue.empty():
                 resultado += queue.get()
             resultados.append(resultado)
+
     print('\n')
     return resultados
 
