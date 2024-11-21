@@ -78,6 +78,7 @@ class Estacionario:
         torneo1 = random.sample(range(len(self.poblacion)), self.p['kWorst'])
         peor_individuo1 = max(torneo1, key=lambda i: self.poblacion[i].fitness)
 
+        # Garantizar que eliminamos dos individuos
         while True:
             torneo2 = random.sample(range(len(self.poblacion)), self.p['kWorst'])
             peor_individuo2 = max(torneo2, key=lambda i: self.poblacion[i].fitness)
