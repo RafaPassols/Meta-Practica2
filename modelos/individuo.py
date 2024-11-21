@@ -1,4 +1,6 @@
 # individuo.py
+
+import random
 import numpy as np
 
 class Individuo:
@@ -19,7 +21,7 @@ class Individuo:
     def intercambio_2opt(self, generacion: int):
         """Realiza una mutación (2-opt) en el individuo."""
         n = len(self.tour)
-        i, j = np.random.default_rng().choice(n, size=2, replace=False)
+        i, j = random.sample(range(len(self.tour)), 2)
         self.fitness += factorizacion_2opt(self.tour, self.matriz_distancias, i, j)
         self.tour[i], self.tour[j] = self.tour[j], self.tour[i]
         self.generacion = generacion
